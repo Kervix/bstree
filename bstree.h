@@ -41,6 +41,7 @@ BSTree bstree_insertar(BSTree, void *, FuncionCopiadora, FuncionComparadora);
 void bstree_recorrer(BSTree, BSTreeRecorrido, FuncionVisitanteExtra,
                      void *extra);
 
-BSTree bstree_eliminar(BSTree arbol, void *dato, FuncionComparadora, FuncionDestructora);
+BSTree bstree_eliminar(BSTree raiz, void *dato, FuncionComparadora, FuncionDestructora);
 
+void* bstree_k_esimo_menor(BSTree raiz, int k, FuncionComparadora);
 #endif //__BSTREE_H__

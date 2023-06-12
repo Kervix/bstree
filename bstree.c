@@ -1,7 +1,7 @@
 #include "bstree.h"
 #include <assert.h>
 #include <stdlib.h>
-
+#include <stdio.h>
 /**
  * Estructura del nodo del arbol de busqueda binaria.
  * Tiene un puntero al dato (dato),
@@ -85,30 +85,41 @@ void bstree_recorrer(BSTree raiz, BSTreeRecorrido orden,
 BSTree bstree_eliminar(BSTree raiz, void *dato, FuncionComparadora comp, FuncionDestructora destr){
   if(raiz!=NULL){
     if (comp(raiz->dato, dato)==0){
-      destr(dato);
-      if(raiz->der==NULL) {
+      printf("lo encontre\n");
+      destr(raiz->dato);
+      if(raiz->der==NULL) {//caso base
         BSTree Temp=raiz;
         raiz=raiz->izq;
         free(Temp);
-      } else if(raiz->izq==NULL){
+      } else if(raiz->izq==NULL){//optimizacion?
         BSTree Temp=raiz;
         raiz=raiz->der;
         free(Temp);
-      } else {
+      } else {//dos distintos de null
         BSTree subarbol=raiz->der;
         BSTree Temp=raiz;
         for(;subarbol->izq!=NULL;subarbol=subarbol->izq) Temp=subarbol;
-        (Temp!=raiz)? Temp->izq=subarbol->der:raiz->der=subarbol->der;
+        if (Temp!=raiz) Temp->izq=subarbol->der;
+        else raiz->der=subarbol->der;
         subarbol->der=raiz->der;
         subarbol->izq=raiz->izq;
         free(raiz);
         raiz=subarbol;
       }
-    } else if(comp(raiz->dato, dato)<0) {
+    } else if(comp(dato, raiz->dato)<0) {
       raiz->izq=bstree_eliminar(raiz->izq, dato, comp, destr);
     } else {
       raiz->der=bstree_eliminar(raiz->der, dato, comp, destr);
     }
+  }
+  return raiz;
+}
+
+void* bstree_k_esimo_menor(BSTree raiz, int k, FuncionComparadora comp){
+  if (raiz != NULL){
+    bstree_k_esimo_menor(raiz->izq, k, comp);
+    k--;
+    bstree_k_esimo_menor(raiz->der, k, comp);
   }
   return raiz;
 }
